@@ -3,7 +3,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PurposeParser {
 
@@ -21,5 +24,10 @@ public class PurposeParser {
         }
 
         return parsedPurposes;
+    }
+
+    public List<String> getAvailableTopicIds() {
+        List<Purpose> purposes = getPurposesFromConfig();
+        return purposes.stream().map(purpose -> purpose.getId()).collect(Collectors.toList());
     }
 }
