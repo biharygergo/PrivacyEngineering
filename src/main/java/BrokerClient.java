@@ -44,5 +44,8 @@ public class BrokerClient {
         customerIdToTopicPolicyMapping.put(customerId, tempMap);
     }
 
+    public String getTopicPolicyIdForCustomer(String customerId, String topic) {
+        return customerIdToTopicPolicyMapping.get(customerId).get(topic);
+    }
 
 }
