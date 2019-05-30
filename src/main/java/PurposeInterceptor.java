@@ -4,10 +4,11 @@ import io.moquette.interception.messages.InterceptAcknowledgedMessage;
 import io.moquette.interception.messages.InterceptConnectMessage;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import io.moquette.interception.messages.InterceptSubscribeMessage;
-import yappl.YaPPL;
+import yappl.models.Policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -16,12 +17,31 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
 
     ArrayList<Customer> customers = new ArrayList<>();
     Map<String, Map<String, String>> customerIdToTopicPolicyMapping = new HashMap<>();
-    YaPPL policyHandler = new YaPPL();
+    PolicyHandler policyHandler = new PolicyHandler();
     Faker faker = new Faker();
+
+    BrokerClient client;
 
     @Override
     public void onConnect(InterceptConnectMessage msg) {
         System.out.println("Connect");
+        String customerId = msg.getClientID();
+        customers.add(
+                new Customer(
+                        customerId,
+                        faker.funnyName().toString(),
+                        faker.address().toString(),
+                        faker.phoneNumber().toString()
+                )
+        );
+
+        PurposeParser parser = new PurposeParser();
+        List<String> topics = parser.getAvailableGeneralTopicIds();
+        for (String topic : topics) {
+            this.updateTopicPolicyMapping(customerId, topic, String.valueOf(policyHandler.createFakePolicy().getId()));
+        }
+
+
     }
 
     @Override
@@ -33,12 +53,25 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
     public void onPublish(InterceptPublishMessage msg) {
         final String decodedPayload = convertPayloadToBytes(msg);
         System.out.println("Received on topic: " + msg.getTopicName() + " content: " + decodedPayload);
-
+        System.out.println(msg.getClientID());
         String policyId = customerIdToTopicPolicyMapping.get(msg.getClientID()).get(msg.getTopicName());
+        List<String> topics = new PurposeParser().getAvailablePurposeTopicIds();
+
+        if (topics.contains(msg.getTopicName())) {
+            System.out.println("Intercepted message on purpose graph...");
+            return;
+        }
         if (policyId != null) {
-            // policyHandler.getPolicy(policyId)
-            // For each purpose
-            // If allowed in policy, republish
+            Policy policy = policyHandler.findPolicyById(Integer.parseInt(policyId));
+            for (String topic : topics) {
+                if (policy.isPurposeAllowed(topic)) {
+                    if (client != null) {
+                        System.out.println(topic);
+                        client.sendMessage(topic, "Republished");
+                    }
+                }
+            }
+
         }
 
     }
@@ -58,23 +91,26 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
     @Override
     public void onSubscribe(InterceptSubscribeMessage msg) {
         super.onSubscribe(msg);
-
-        String customerId = msg.getClientID();
-        String topic = msg.getTopicFilter();
-        customers.add(
-            new Customer(
-                customerId,
-                faker.funnyName().toString(),
-                faker.address().toString(),
-                faker.phoneNumber().toString()
-            )
-        );
-
-        this.updateTopicPolicyMapping(customerId, topic, policyHandler.generateNewPolicyId());
     }
 
     private void updateTopicPolicyMapping(String customerId, String topic, String policyId) {
-        Map<String, String> tempMap = new HashMap<String, String>() {{ put(topic, policyId); }};
-        customerIdToTopicPolicyMapping.put(customerId, tempMap);
+        Map<String, String> savedMap = customerIdToTopicPolicyMapping.get(customerId);
+        Map<String, String> tempMap;
+        if (savedMap != null) {
+            savedMap.put(topic, policyId);
+        } else {
+            tempMap = new HashMap<String, String>() {{
+                put(topic, policyId);
+            }};
+            customerIdToTopicPolicyMapping.put(customerId, tempMap);
+        }
+    }
+
+    public BrokerClient getClient() {
+        return client;
+    }
+
+    public void setClient(BrokerClient client) {
+        this.client = client;
     }
 }

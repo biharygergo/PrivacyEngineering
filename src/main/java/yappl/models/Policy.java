@@ -115,6 +115,11 @@ public class Policy {
         return true;
     }
 
+    public boolean isPurposeAllowed(String purpose) {
+        return getPurpose().getPermitted().contains(purpose)
+                && !getPurpose().getExcluded().contains(purpose);
+    }
+
     public Purpose getPurpose() {
         Purpose purpose = new Purpose();
         for (Rule rule : getAllActiveRules()) {

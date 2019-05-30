@@ -37,7 +37,8 @@ public final class BrokerLauncher {
         final IConfig classPathConfig = new ResourceLoaderConfig(classpathLoader);
 
         final Server mqttBroker = new Server();
-        List<? extends InterceptHandler> userHandlers = Collections.singletonList(new PurposeInterceptor());
+        PurposeInterceptor interceptor = new PurposeInterceptor();
+        List<? extends InterceptHandler> userHandlers = Collections.singletonList(interceptor);
 
         // Start the broker
         mqttBroker.startServer(classPathConfig, userHandlers);
@@ -52,8 +53,15 @@ public final class BrokerLauncher {
 
         Thread.sleep(5000);
 
-        BrokerClient client = new BrokerClient();
-        client.sendMessage();
+        interceptor.setClient(new BrokerClient("localhost", 1883));
+
+        for (int i = 0; i < 10; i++) {
+            BrokerClient client = new BrokerClient("localhost", 1883);
+            client.sendMessage("temperature", "Hello");
+
+
+        }
+
     }
 
     private BrokerLauncher() {

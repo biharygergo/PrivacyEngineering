@@ -26,7 +26,11 @@ public class PurposeParser {
         return parsedPurposes;
     }
 
-    public List<String> getAvailableTopicIds() {
+    public List<String> getAvailableGeneralTopicIds() {
+        return Arrays.asList("temperature", "water", "light");
+    }
+
+    public List<String> getAvailablePurposeTopicIds() {
         List<Purpose> purposes = getPurposesFromConfig();
         return purposes.stream().map(purpose -> purpose.getId()).collect(Collectors.toList());
     }

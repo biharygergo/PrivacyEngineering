@@ -30,7 +30,7 @@ public class PolicyHandler {
     }
 
     private List<String> getRandomTopicIds() {
-        List<String> availableIds = purposeParser.getAvailableTopicIds();
+        List<String> availableIds = purposeParser.getAvailablePurposeTopicIds();
         Collections.shuffle(availableIds);
         return availableIds.subList(0, 3);
     }
