@@ -11,11 +11,9 @@ import java.util.Map;
 public class BrokerClient {
 
     MQTT mqtt;
-    Map<String, Map<String, String>> customerIdToTopicPolicyMapping;
 
     public BrokerClient() {
         mqtt = new MQTT();
-        customerIdToTopicPolicyMapping = new HashMap<>();
 
         try {
             mqtt.setHost("localhost", 1883);
@@ -35,17 +33,4 @@ public class BrokerClient {
             e.printStackTrace();
         }
     }
-
-    public void updateTopicPolicy(String customerId, String topic, String policyId) {
-        Map<String, String> tempMap = new HashMap<>();
-
-        // policyId/topic validation?
-        tempMap.put(topic, policyId);
-        customerIdToTopicPolicyMapping.put(customerId, tempMap);
-    }
-
-    public String getTopicPolicyIdForCustomer(String customerId, String topic) {
-        return customerIdToTopicPolicyMapping.get(customerId).get(topic);
-    }
-
 }
