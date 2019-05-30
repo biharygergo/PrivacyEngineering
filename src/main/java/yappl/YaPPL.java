@@ -13,9 +13,9 @@ import yappl.models.Preference;
 import java.io.IOException;
 
 public class YaPPL {
-    ObjectMapper mapper = new ObjectMapper(); // create once, reuse
+    static ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
-    public void validate(String policy) throws IOException, YaPPLFormatException {
+    public static void validate(String policy) throws IOException, YaPPLFormatException {
         JsonNode schemaNode = loadResource("/YaPPL_schema.json");
         JsonNode toValidate = mapper.readTree(policy);
 
@@ -35,18 +35,17 @@ public class YaPPL {
         }
     }
 
-    public Policy parse(String jsonPolicy) throws IOException {
-        Policy policy = new Policy();
+    public static Policy parse(String jsonPolicy) throws IOException {
 
         Policy parsedPolicy = mapper.readValue(jsonPolicy, Policy.class);
         int ruleId = 0;
         for (Preference preference : parsedPolicy.getPreference()) {
             preference.getRule().setId(ruleId++);
         }
-        return policy;
+        return parsedPolicy;
     }
 
-    public JsonNode loadResource(final String name)
+    public static JsonNode loadResource(final String name)
             throws IOException {
         final String packageName = YaPPL.class.getPackage().getName();
         String packageBase = '/' + packageName.replace(".", "/");
@@ -57,4 +56,5 @@ public class YaPPL {
     public String generateNewPolicyId() {
         return "1";
     }
+
 }
