@@ -3,18 +3,19 @@ package yappl.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Rule {
     @JsonIgnore
-    private int id;
-    private Purpose purpose;
-    private Utilizer utilizer;
-    private List<Transformation> transformation;
+    private int id = 0;
+    private Purpose purpose = new Purpose();
+    private Utilizer utilizer = new Utilizer();
+    private List<Transformation> transformation = new ArrayList<>();
     @JsonProperty("valid_from")
-    private String validFrom;
+    private String validFrom = "0000-00-00T00:00:00.00Z";
     @JsonProperty("exp_date")
-    private String expDate;
+    private String expDate = "0000-00-00T00:00:00.00Z";
 
     public Purpose getPurpose() {
         return purpose;

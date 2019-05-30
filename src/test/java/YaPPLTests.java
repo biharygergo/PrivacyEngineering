@@ -24,12 +24,20 @@ public class YaPPLTests {
     @Test
     public void parseValidPolicy() throws IOException, URISyntaxException {
         YaPPL yaPPL = new YaPPL();
-
-
         String loadedJson = this.loadFileAsString("valid_policy.json");
         Policy parsed = yaPPL.parse(loadedJson);
         System.out.println(parsed);
+    }
 
+    @Test
+    public void testPolicyMethods() throws IOException, URISyntaxException {
+        YaPPL yaPPL = new YaPPL();
+        String loadedJson = this.loadFileAsString("valid_policy.json");
+        Policy policy = yaPPL.parse(loadedJson);
+        System.out.println(policy.getExcludedPurposes());
+        System.out.println(policy.getExcludedUtilizers());
+        System.out.println(policy.getTrRules());
+        System.out.println(policy.createPolicy());
     }
 
     @Test
