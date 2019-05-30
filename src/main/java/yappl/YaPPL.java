@@ -53,4 +53,8 @@ public class YaPPL {
         return JsonLoader.fromResource(packageBase + name);
     }
 
+    public String generateNewPolicyId() {
+        return "1";
+    }
+
 }
