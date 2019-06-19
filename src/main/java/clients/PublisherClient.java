@@ -1,15 +1,17 @@
+package clients;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.fusesource.mqtt.client.Callback;
 import org.fusesource.mqtt.client.CallbackConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 
-public class BrokerClient {
+public class PublisherClient {
 
     MQTT mqtt;
     CallbackConnection connection;
 
-    public BrokerClient(String host, int port) {
+    public PublisherClient(String host, int port) {
         mqtt = new MQTT();
         try {
             // mqtt.setHost("localhost", 1883);
