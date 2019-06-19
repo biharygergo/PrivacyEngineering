@@ -1,9 +1,13 @@
+package broker;
+
+import clients.PublisherClient;
 import com.github.javafaker.Faker;
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptAcknowledgedMessage;
 import io.moquette.interception.messages.InterceptConnectMessage;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import io.moquette.interception.messages.InterceptSubscribeMessage;
+import broker.parsers.PurposeParser;
 import yappl.models.Policy;
 
 import java.util.ArrayList;
@@ -13,14 +17,14 @@ import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class PurposeInterceptor extends AbstractInterceptHandler {
+public class PurposeBroker extends AbstractInterceptHandler {
 
     ArrayList<Customer> customers = new ArrayList<>();
     Map<String, Map<String, String>> customerIdToTopicPolicyMapping = new HashMap<>();
     PolicyHandler policyHandler = new PolicyHandler();
     Faker faker = new Faker();
 
-    BrokerClient client;
+    PublisherClient client;
 
     @Override
     public void onConnect(InterceptConnectMessage msg) {
@@ -106,11 +110,11 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
         }
     }
 
-    public BrokerClient getClient() {
+    public PublisherClient getClient() {
         return client;
     }
 
-    public void setClient(BrokerClient client) {
+    public void setClient(PublisherClient client) {
         this.client = client;
     }
 }

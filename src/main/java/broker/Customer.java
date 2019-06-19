@@ -1,3 +1,5 @@
+package broker;
+
 public class Customer {
     String id;
     String name;

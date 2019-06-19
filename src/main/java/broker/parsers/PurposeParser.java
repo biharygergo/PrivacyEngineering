@@ -1,3 +1,5 @@
+package broker.parsers;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class PurposeParser {
             // read the file
             byte[] jsonData = Files.readAllBytes(Paths.get("src/main/resources/purpose_config.json"));
             ObjectMapper objectMapper = new ObjectMapper();
-            // map the purposes from jsonData to a list of Purpose objects
+            // map the purposes from jsonData to a list of broker.parsers.Purpose objects
             parsedPurposes = Arrays.asList(objectMapper.readValue(jsonData, Purpose[].class));
 
         } catch (IOException e) {
