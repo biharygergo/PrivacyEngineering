@@ -1,15 +1,36 @@
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UtilizerParser {
 
     public List<Utilizer> getUtilizersFromConfig() {
-        return new ArrayList<>();
+        List<Utilizer> parsedUtilizers = new ArrayList<>();
+
+        try {
+            // read the file
+            byte[] jsonData = Files.readAllBytes(Paths.get("src/main/resources/utilizer_config.json"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            // map the purposes from jsonData to a list of Purpose objects
+            parsedUtilizers = Arrays.asList(objectMapper.readValue(jsonData, Utilizer[].class));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return parsedUtilizers;
     }
 
     public List<String> getAvailableUtilizerIds() {
-        return new ArrayList<>();
+        List<Utilizer> utilizers = getUtilizersFromConfig();
+        return utilizers.stream().map(utilizer -> utilizer.getId()).collect(Collectors.toList());
     }
 }
 

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "Uwr1j3ifoe2onmwofi23nor",
+    "name": "Vatenfall",
+    "address": "Some street 1, 11111 Berlin",
+    "phone_number": "123123123"
+  },
+  {
+    "id": "Uwr1j3ifoe2onmwofi23ron",
+    "name": "TU Berlin",
+    "address": "Some street 2, 22222 Berlin",
+    "phone_number": "123123123"
+  },
+  {
+  "id": "Uwr1j3ifoe2onmwofi23rot",
+  "name": "Deutsche Bank",
+  "address": "Some street 3, 33333 Berlin",
+  "phone_number": "123123123"
+  },
+  {
+  "id": "Uwr1j3ifoe2onmwofi23tor",
+  "name": "Allianz",
+  "address": "Some street 4, 44444 Berlin",
+  "phone_number": "123123123"
+  },
+  {
+  "id": "Uwr1j3ifoe2onmwofi23ooo",
+  "name": "Amazon",
+  "address": "Some street 5, 55555 Berlin",
+  "phone_number": "123123123"
+}
+]
