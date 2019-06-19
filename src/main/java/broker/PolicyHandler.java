@@ -36,11 +36,16 @@ public class PolicyHandler {
 
     }
 
-    public boolean getAllowedRepublicationTopics(Policy policy) {
+    public List<String> getAllowedRepublicationTopics(Policy policy) {
         List<String> topics = new ArrayList<>();
         for (Rule rule : policy.getTrRules()) {
-
+            for (String permittedPurpose : rule.getPurpose().getPermitted()) {
+                for (String permittedUtilizer : rule.getUtilizer().getPermitted()) {
+                    topics.add(permittedUtilizer + "/" + permittedPurpose);
+                }
+            }
         }
+        return topics;
     }
 
 
