@@ -16,7 +16,9 @@
 
 
 import broker.PurposeBroker;
+import clients.ClientSimulator;
 import clients.PublisherClient;
+import clients.PublisherSyncClient;
 import io.moquette.interception.InterceptHandler;
 import io.moquette.server.Server;
 import io.moquette.server.config.ClasspathResourceLoader;
@@ -55,14 +57,9 @@ public final class BrokerLauncher {
 
         Thread.sleep(5000);
 
-        interceptor.setClient(new PublisherClient("localhost", 1883));
-
-        for (int i = 0; i < 10; i++) {
-            PublisherClient client = new PublisherClient("localhost", 1883);
-            client.sendMessage("temperature", "Hello");
-
-
-        }
+        interceptor.setClient(new PublisherSyncClient("localhost", 1883));
+        ClientSimulator clientSimulator = new ClientSimulator();
+        clientSimulator.start();
 
     }
 

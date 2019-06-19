@@ -1,13 +1,14 @@
 package broker;
 
+import broker.parsers.PurposeParser;
 import clients.PublisherClient;
+import clients.PublisherSyncClient;
 import com.github.javafaker.Faker;
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptAcknowledgedMessage;
 import io.moquette.interception.messages.InterceptConnectMessage;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import io.moquette.interception.messages.InterceptSubscribeMessage;
-import broker.parsers.PurposeParser;
 import yappl.models.Policy;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class PurposeBroker extends AbstractInterceptHandler {
     PolicyHandler policyHandler = new PolicyHandler();
     Faker faker = new Faker();
 
-    PublisherClient client;
+    PublisherSyncClient client;
 
     @Override
     public void onConnect(InterceptConnectMessage msg) {
@@ -56,24 +57,21 @@ public class PurposeBroker extends AbstractInterceptHandler {
     @Override
     public void onPublish(InterceptPublishMessage msg) {
         final String decodedPayload = convertPayloadToBytes(msg);
-        System.out.println("Received on topic: " + msg.getTopicName() + " content: " + decodedPayload);
-        System.out.println(msg.getClientID());
+        System.out.println("Received on topic: " + msg.getTopicName() + " content: " + decodedPayload + " from: " + msg.getClientID());
         String policyId = customerIdToTopicPolicyMapping.get(msg.getClientID()).get(msg.getTopicName());
         List<String> topics = new PurposeParser().getAvailablePurposeTopicIds();
 
         if (topics.contains(msg.getTopicName())) {
-            System.out.println("Intercepted message on purpose graph...");
+            // System.out.println("Intercepted message on purpose graph...");
             return;
         }
         if (policyId != null) {
             Policy policy = policyHandler.findPolicyById(Integer.parseInt(policyId));
-            for (String topic : topics) {
-                if (policy.isPurposeAllowed(topic)) {
-                    if (client != null) {
-                        System.out.println(topic);
-                        client.sendMessage(topic, "Republished");
-                    }
-                }
+
+            for (String topic : policyHandler.getAllowedRepublicationTopics(policy)) {
+                System.out.println(topic);
+                client.sendMessage("purpose-topology/" + topic, decodedPayload);
+                System.out.println("Republished on topic: " + topic);
             }
 
         }
@@ -110,11 +108,11 @@ public class PurposeBroker extends AbstractInterceptHandler {
         }
     }
 
-    public PublisherClient getClient() {
+    public PublisherSyncClient getClient() {
         return client;
     }
 
-    public void setClient(PublisherClient client) {
+    public void setClient(PublisherSyncClient client) {
         this.client = client;
     }
 }
