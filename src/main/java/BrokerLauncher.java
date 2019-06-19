@@ -17,8 +17,8 @@
 
 import broker.PurposeBroker;
 import clients.ClientSimulator;
-import clients.PublisherClient;
 import clients.PublisherSyncClient;
+import clients.SubscriberSimulator;
 import io.moquette.interception.InterceptHandler;
 import io.moquette.server.Server;
 import io.moquette.server.config.ClasspathResourceLoader;
@@ -41,6 +41,7 @@ public final class BrokerLauncher {
         final IConfig classPathConfig = new ResourceLoaderConfig(classpathLoader);
 
         final Server mqttBroker = new Server();
+
         PurposeBroker interceptor = new PurposeBroker();
         List<? extends InterceptHandler> userHandlers = Collections.singletonList(interceptor);
 
@@ -60,6 +61,9 @@ public final class BrokerLauncher {
         interceptor.setClient(new PublisherSyncClient("localhost", 1883));
         ClientSimulator clientSimulator = new ClientSimulator();
         clientSimulator.start();
+
+        SubscriberSimulator subscriberSimulator = new SubscriberSimulator();
+        subscriberSimulator.start();
 
     }
 

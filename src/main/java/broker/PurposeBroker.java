@@ -1,7 +1,6 @@
 package broker;
 
 import broker.parsers.PurposeParser;
-import clients.PublisherClient;
 import clients.PublisherSyncClient;
 import com.github.javafaker.Faker;
 import io.moquette.interception.AbstractInterceptHandler;
@@ -92,7 +91,19 @@ public class PurposeBroker extends AbstractInterceptHandler {
 
     @Override
     public void onSubscribe(InterceptSubscribeMessage msg) {
-        super.onSubscribe(msg);
+        String topic = msg.getTopicFilter();
+        String clientId = msg.getClientID();
+
+        if (!topic.contains("purpose")) {
+            super.onSubscribe(msg);
+            return;
+        }
+
+        if (clientId.equals(topic.split("/")[1])) {
+            super.onSubscribe(msg);
+        }
+
+
     }
 
     private void updateTopicPolicyMapping(String customerId, String topic, String policyId) {
