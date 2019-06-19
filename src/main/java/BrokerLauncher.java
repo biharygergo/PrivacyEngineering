@@ -15,21 +15,11 @@
  */
 
 
-import broker.PurposeAuthorizator;
 import broker.PurposeBroker;
 import clients.ClientSimulator;
-import clients.PublisherSyncClient;
 import clients.SubscriberSimulator;
-import io.moquette.interception.InterceptHandler;
-import io.moquette.server.Server;
-import io.moquette.server.config.ClasspathResourceLoader;
-import io.moquette.server.config.IConfig;
-import io.moquette.server.config.IResourceLoader;
-import io.moquette.server.config.ResourceLoaderConfig;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Simple example of how to embed the broker in another project
@@ -38,36 +28,14 @@ public final class BrokerLauncher {
 
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        IResourceLoader classpathLoader = new ClasspathResourceLoader();
-        final IConfig classPathConfig = new ResourceLoaderConfig(classpathLoader);
+        PurposeBroker purposeBroker = new PurposeBroker();
+        purposeBroker.startBroker();
 
-        final Server mqttBroker = new Server();
-
-        PurposeBroker interceptor = new PurposeBroker();
-        List<? extends InterceptHandler> userHandlers = Collections.singletonList(interceptor);
-
-        // Start the broker
-        mqttBroker.startServer(classPathConfig, userHandlers, null, null, new PurposeAuthorizator());
-        System.out.println("Broker started. Press [CTRL+C] to stop.");
-
-        //Bind a shutdown hook
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Stopping broker");
-            mqttBroker.stopServer();
-            System.out.println("Broker stopped");
-        }));
-
-        Thread.sleep(5000);
-
-        interceptor.setClient(new PublisherSyncClient("localhost", 1883));
         ClientSimulator clientSimulator = new ClientSimulator();
         clientSimulator.start();
 
         SubscriberSimulator subscriberSimulator = new SubscriberSimulator();
         subscriberSimulator.start();
 
-    }
-
-    private BrokerLauncher() {
     }
 }

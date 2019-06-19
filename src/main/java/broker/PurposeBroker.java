@@ -1,129 +1,55 @@
 package broker;
 
-import broker.parsers.PurposeParser;
-import clients.PublisherSyncClient;
-import com.github.javafaker.Faker;
-import io.moquette.interception.AbstractInterceptHandler;
-import io.moquette.interception.messages.InterceptAcknowledgedMessage;
-import io.moquette.interception.messages.InterceptConnectMessage;
-import io.moquette.interception.messages.InterceptPublishMessage;
-import io.moquette.interception.messages.InterceptSubscribeMessage;
-import yappl.models.Policy;
+import io.moquette.interception.InterceptHandler;
+import io.moquette.server.Server;
+import io.moquette.server.config.ClasspathResourceLoader;
+import io.moquette.server.config.IConfig;
+import io.moquette.server.config.IResourceLoader;
+import io.moquette.server.config.ResourceLoaderConfig;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.mqtt.MqttMessageBuilders;
+import io.netty.handler.codec.mqtt.MqttPublishMessage;
+import io.netty.handler.codec.mqtt.MqttQoS;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class PurposeBroker extends AbstractInterceptHandler {
+public class PurposeBroker {
 
-    ArrayList<Customer> customers = new ArrayList<>();
-    Map<String, Map<String, String>> customerIdToTopicPolicyMapping = new HashMap<>();
-    PolicyHandler policyHandler = new PolicyHandler();
-    Faker faker = new Faker();
+    public void startBroker() throws IOException {
+        IResourceLoader classpathLoader = new ClasspathResourceLoader();
+        final IConfig classPathConfig = new ResourceLoaderConfig(classpathLoader);
 
-    PublisherSyncClient client;
+        final Server mqttBroker = new Server();
 
-    @Override
-    public void onConnect(InterceptConnectMessage msg) {
-        System.out.println("Connect");
-        String customerId = msg.getClientID();
-        customers.add(
-                new Customer(
-                        customerId,
-                        faker.funnyName().toString(),
-                        faker.address().toString(),
-                        faker.phoneNumber().toString()
-                )
-        );
+        PurposeInterceptor interceptor = new PurposeInterceptor();
+        List<? extends InterceptHandler> userHandlers = Collections.singletonList(interceptor);
 
-        PurposeParser parser = new PurposeParser();
-        List<String> topics = parser.getAvailableGeneralTopicIds();
-        for (String topic : topics) {
-            this.updateTopicPolicyMapping(customerId, topic, String.valueOf(policyHandler.createFakePolicy().getId()));
-        }
+        // Start the broker
+        mqttBroker.startServer(classPathConfig, userHandlers, null, null, new PurposeAuthorizator());
+        System.out.println("Broker started. Press [CTRL+C] to stop.");
 
+        //Bind a shutdown hook
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Stopping broker");
+            mqttBroker.stopServer();
+            System.out.println("Broker stopped");
+        }));
 
+        interceptor.setOnRepublicationEventListener((topic, message) -> republishMessage(topic, message, mqttBroker));
     }
 
-    @Override
-    public String getID() {
-        return "EmbeddedLauncherPublishListener";
-    }
+    private void republishMessage(String topic, String message, Server mqttBroker) {
+        MqttPublishMessage messageToSend = MqttMessageBuilders.publish()
+                .topicName(topic)
+                .retained(true)
+                .qos(MqttQoS.EXACTLY_ONCE)
+                .payload(Unpooled.copiedBuffer(message.getBytes(UTF_8)))
+                .build();
 
-    @Override
-    public void onPublish(InterceptPublishMessage msg) {
-        final String decodedPayload = convertPayloadToBytes(msg);
-        System.out.println("Received on topic: " + msg.getTopicName() + " content: " + decodedPayload + " from: " + msg.getClientID());
-        String policyId = customerIdToTopicPolicyMapping.get(msg.getClientID()).get(msg.getTopicName());
-        List<String> topics = new PurposeParser().getAvailablePurposeTopicIds();
-
-        if (topics.contains(msg.getTopicName())) {
-            // System.out.println("Intercepted message on purpose graph...");
-            return;
-        }
-        if (policyId != null) {
-            Policy policy = policyHandler.findPolicyById(Integer.parseInt(policyId));
-
-            for (String topic : policyHandler.getAllowedRepublicationTopics(policy)) {
-                System.out.println(topic);
-                client.sendMessage("purpose-topology/" + topic, decodedPayload);
-                System.out.println("Republished on topic: " + topic);
-            }
-
-        }
-
-    }
-
-    private String convertPayloadToBytes(InterceptPublishMessage msg) {
-        byte[] bytes = new byte[msg.getPayload().readableBytes()];
-        msg.getPayload().duplicate().readBytes(bytes);
-        return new String(bytes, UTF_8);
-    }
-
-    @Override
-    public void onMessageAcknowledged(InterceptAcknowledgedMessage msg) {
-        super.onMessageAcknowledged(msg);
-        System.out.println("Message acknowledged.");
-    }
-
-    @Override
-    public void onSubscribe(InterceptSubscribeMessage msg) {
-        String topic = msg.getTopicFilter();
-        String clientId = msg.getClientID();
-
-        if (!topic.contains("purpose")) {
-            super.onSubscribe(msg);
-            return;
-        }
-
-        if (clientId.equals(topic.split("/")[1])) {
-            super.onSubscribe(msg);
-        }
-
-
-    }
-
-    private void updateTopicPolicyMapping(String customerId, String topic, String policyId) {
-        Map<String, String> savedMap = customerIdToTopicPolicyMapping.get(customerId);
-        Map<String, String> tempMap;
-        if (savedMap != null) {
-            savedMap.put(topic, policyId);
-        } else {
-            tempMap = new HashMap<String, String>() {{
-                put(topic, policyId);
-            }};
-            customerIdToTopicPolicyMapping.put(customerId, tempMap);
-        }
-    }
-
-    public PublisherSyncClient getClient() {
-        return client;
-    }
-
-    public void setClient(PublisherSyncClient client) {
-        this.client = client;
+        mqttBroker.internalPublish(messageToSend, "INTRLPUB");
     }
 }
