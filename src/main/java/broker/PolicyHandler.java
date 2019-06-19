@@ -31,6 +31,14 @@ public class PolicyHandler {
                     Arrays.asList(),
                     Arrays.asList());
         }
+        // Catch all rule for benchmarking
+        policy.newRule(
+                Arrays.asList("benchmark"),
+                Arrays.asList(),
+                Arrays.asList("benchmarker"),
+                Arrays.asList(),
+                Arrays.asList());
+
         savedPolicies.add(policy);
         return policy;
 
