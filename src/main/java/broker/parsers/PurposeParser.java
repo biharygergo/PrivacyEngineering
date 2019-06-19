@@ -34,6 +34,6 @@ public class PurposeParser {
 
     public List<String> getAvailablePurposeTopicIds() {
         List<Purpose> purposes = getPurposesFromConfig();
-        return purposes.stream().map(purpose -> purpose.getId()).collect(Collectors.toList());
+        return purposes.stream().map(Purpose::getId).collect(Collectors.toList());
     }
 }

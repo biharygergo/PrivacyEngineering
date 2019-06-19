@@ -5,18 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Utilizer {
 
     @JsonProperty("id")
-    String id = "";
+    private String id = "";
 
     @JsonProperty("name")
-    String name = "";
+    private String name = "";
 
     @JsonProperty("address")
-    String address = "";
+    private String address = "";
 
     @JsonProperty("phone_number")
-    String phoneNumber = "";
+    private String phoneNumber = "";
 
-    public String getId() {
+    String getId() {
         return id;
     }
 

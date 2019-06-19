@@ -4,30 +4,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Purpose {
     @JsonProperty("id")
-    String id = "";
+    private String id = "";
 
     @JsonProperty("all_props")
-    String allProps = "false";
+    private String allProps = "false";
 
     @JsonProperty("topic_name")
-    String topicName = "false";
+    private String topicName = "false";
 
     @JsonProperty("location")
-    String location = "false";
+    private String location = "false";
 
     @JsonProperty("aggregate_frequency")
-    String aggregateFrequency = "0";
+    private String aggregateFrequency = "0";
 
     @JsonProperty("contact_details")
-    String contactDetails = "false";
+    private String contactDetails = "false";
 
     @JsonProperty("customer_id")
-    String customerId = "false";
+    private String customerId = "false";
 
     @JsonProperty("offer_type")
-    String offerType = "";
+    private String offerType = "";
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
