@@ -15,6 +15,7 @@
  */
 
 
+import broker.PurposeAuthorizator;
 import broker.PurposeBroker;
 import clients.ClientSimulator;
 import clients.PublisherSyncClient;
@@ -46,7 +47,7 @@ public final class BrokerLauncher {
         List<? extends InterceptHandler> userHandlers = Collections.singletonList(interceptor);
 
         // Start the broker
-        mqttBroker.startServer(classPathConfig, userHandlers);
+        mqttBroker.startServer(classPathConfig, userHandlers, null, null, new PurposeAuthorizator());
         System.out.println("Broker started. Press [CTRL+C] to stop.");
 
         //Bind a shutdown hook
