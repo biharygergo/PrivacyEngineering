@@ -6,8 +6,8 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 
 public class PublisherSyncClient {
-    MQTT mqtt;
-    BlockingConnection connection;
+    private MQTT mqtt;
+    private BlockingConnection connection;
 
     public PublisherSyncClient(String host, int port) {
         mqtt = new MQTT();
@@ -32,5 +32,9 @@ public class PublisherSyncClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getClientId() {
+        return mqtt.getClientId().toString();
     }
 }

@@ -31,9 +31,6 @@ public final class BrokerLauncher {
         PurposeBroker purposeBroker = new PurposeBroker();
         purposeBroker.startBroker();
 
-        ClientSimulator clientSimulator = new ClientSimulator();
-        clientSimulator.start();
-
         SubscriberSimulator subscriberSimulator = new SubscriberSimulator();
         subscriberSimulator.start();
 
