@@ -4,8 +4,6 @@ import org.fusesource.hawtbuf.Buffer;
 import org.fusesource.hawtbuf.UTF8Buffer;
 import org.fusesource.mqtt.client.*;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class SubscriberClient {
 
     MQTT mqtt;
@@ -45,8 +43,8 @@ public class SubscriberClient {
 
                 @Override
                 public void onPublish(UTF8Buffer topic, Buffer body, Runnable ack) {
-                    System.out.println("PURPOSE SUBSCRIPTION MESSAGE: ");
-                    System.out.println(new String(body.toByteArray(), UTF_8));
+                    // System.out.println("New message on subscription: " + new String(topic.toByteArray()) + "\n");
+                    // System.out.println(new String(body.toByteArray(), UTF_8));
                 }
 
                 @Override

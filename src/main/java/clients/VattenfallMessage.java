@@ -1,36 +1,42 @@
 package clients;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 import java.util.concurrent.ThreadLocalRandom;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class VattenfallMessage {
-    private String subscriberId;
-    private String measurementType;
+    @JsonProperty("subscriber_id")
+    private String subscriber_id;
+    @JsonProperty("measurement_type")
+    private String measurement_type;
     private double measurement;
     private long timestamp = Instant.now().getEpochSecond();
 
     static VattenfallMessage createFakeMessage(String subscriberId, String topic) {
         VattenfallMessage message = new VattenfallMessage();
-        message.setSubscriberId(subscriberId);
-        message.setMeasurementType(topic);
+        message.setSubscriber_id(subscriberId);
+        message.setMeasurement_type(topic);
         message.measurement = ThreadLocalRandom.current().nextDouble(0, 100);
         return message;
     }
 
-    public String getSubscriberId() {
-        return subscriberId;
+    public String getSubscriber_id() {
+        return subscriber_id;
     }
 
-    public void setSubscriberId(String subscriberId) {
-        this.subscriberId = subscriberId;
+    public void setSubscriber_id(String subscriber_id) {
+        this.subscriber_id = subscriber_id;
     }
 
-    public String getMeasurementType() {
-        return measurementType;
+    public String getMeasurement_type() {
+        return measurement_type;
     }
 
-    public void setMeasurementType(String measurementType) {
-        this.measurementType = measurementType;
+    public void setMeasurement_type(String measurement_type) {
+        this.measurement_type = measurement_type;
     }
 
     public double getMeasurement() {
@@ -48,4 +54,5 @@ public class VattenfallMessage {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
 }

@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PurposeParser {
+    List<Purpose> parsedPurposes = new ArrayList<>();
 
     public List<Purpose> getPurposesFromConfig() {
-        List<Purpose> parsedPurposes = new ArrayList<>();
         try {
             // read the file
             byte[] jsonData = Files.readAllBytes(Paths.get("src/main/resources/purpose_config.json"));
@@ -33,7 +33,10 @@ public class PurposeParser {
     }
 
     public List<String> getAvailablePurposeTopicIds() {
-        List<Purpose> purposes = getPurposesFromConfig();
+        List<Purpose> purposes = parsedPurposes;
+        if (parsedPurposes.size() == 0) {
+            purposes = getPurposesFromConfig();
+        }
         return purposes.stream().map(Purpose::getId).collect(Collectors.toList());
     }
 }

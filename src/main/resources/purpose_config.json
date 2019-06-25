@@ -1,35 +1,64 @@
 [
-   {
+  {
     "id": "admin/analysis",
-    "all_props": "true",
-    "topic_name": "true",
-    "location": "true",
+    "removed_properties": [],
+    "added_properties": [
+      "address"
+    ],
     "aggregate_frequency": "0"
   },
   {
     "id": "admin/maintenance",
-    "all_props": "true",
-    "topic_name": "true",
-    "contact_details": "true",
+    "removed_properties": [],
+    "added_properties": [
+      "name",
+      "contact",
+      "address"
+    ],
     "aggregate_frequency": "0"
   },
   {
     "id": "marketing/special_offers",
-    "customer_id": "true",
-    "offer_type": "custom_pricing",
-    "contact_details": "true",
-    "aggregate_frequency": "10"
+    "removed_properties": [
+      "measurement",
+      "measurement_type",
+      "timestamp"
+    ],
+    "added_properties": [
+      "name",
+      "offer_type",
+      "contact"
+    ],
+    "aggregate_frequency": "20"
   },
   {
     "id": "third_parties/research",
-    "topic_name": "true",
-    "location": "true",
+    "removed_properties": [
+      "subscriber_id"
+    ],
+    "added_properties": [
+      "address"
+    ],
     "aggregate_frequency": "5"
   },
   {
     "id": "other/research",
-    "all_props": "true",
-    "topic_name": "true",
+    "removed_properties": [
+      "subscriber_id"
+    ],
+    "added_properties": [
+      "address"
+    ],
+    "aggregate_frequency": "0"
+  },
+  {
+    "id": "benchmark",
+    "removed_properties": [
+      "subscriber_id"
+    ],
+    "added_properties": [
+      "address"
+    ],
     "aggregate_frequency": "0"
   }
 ]

@@ -53,10 +53,10 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
         }
 
         final String decodedPayload = convertPayloadToBytes(msg);
-        System.out.println(
+       /* System.out.println(
                 "Received on topic: " + msg.getTopicName() +
                         " content: " + decodedPayload +
-                        " from: " + msg.getClientID());
+                        " from: " + msg.getClientID());*/
 
         String policyId = customerIdToTopicPolicyMapping.get(msg.getClientID()).get(msg.getTopicName());
 
@@ -64,7 +64,7 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
             Policy policy = policyHandler.findPolicyById(Integer.parseInt(policyId));
             for (String topic : policyHandler.getAllowedRepublicationTopics(policy)) {
                 if (onRepublicationEventListener != null) {
-                    onRepublicationEventListener.republish("purpose-topology/" + topic, decodedPayload);
+                    onRepublicationEventListener.republish(topic, decodedPayload);
                 }
             }
 
@@ -83,9 +83,9 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
         customers.add(
                 new Customer(
                         clientID,
-                        faker.funnyName().toString(),
-                        faker.address().toString(),
-                        faker.phoneNumber().toString()
+                        faker.funnyName().name(),
+                        faker.address().fullAddress(),
+                        faker.phoneNumber().phoneNumber()
                 )
         );
     }
@@ -110,6 +110,10 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
 
     void setOnRepublicationEventListener(OnRepublicationEventListener onRepublicationEventListener) {
         this.onRepublicationEventListener = onRepublicationEventListener;
+    }
+
+    public ArrayList<Customer> getCustomers() {
+        return customers;
     }
 }
 
