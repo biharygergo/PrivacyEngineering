@@ -86,7 +86,7 @@ public class PurposeBroker {
     private void addAdditionalProperties(VattenfallMessage vattenfallMessage, Purpose purpose, VattenfallPurposeMessage vattenfallPurposeMessage) throws NoSuchFieldException, IllegalAccessException {
         if (!purpose.getAddedProperties().isEmpty()) {
             Customer customer = interceptor.getCustomers().stream()
-                    .filter(customer1 -> customer1.id.equals(vattenfallMessage.getSubscriber_id())).findFirst().orElse(null);
+                    .filter(customer1 -> customer1.getId().equals(vattenfallMessage.getSubscriber_id())).findFirst().orElse(null);
 
             if (customer != null) {
                 for (String toAdd : purpose.getAddedProperties()) {

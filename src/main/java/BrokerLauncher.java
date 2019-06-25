@@ -16,7 +16,6 @@
 
 
 import broker.PurposeBroker;
-import clients.ClientSimulator;
 import clients.SubscriberSimulator;
 
 import java.io.IOException;
@@ -35,4 +34,5 @@ public final class BrokerLauncher {
         subscriberSimulator.start();
 
     }
+
 }

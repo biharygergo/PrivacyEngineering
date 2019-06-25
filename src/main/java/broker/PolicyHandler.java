@@ -59,7 +59,7 @@ public class PolicyHandler {
         return this.savedPolicies.stream()
                 .filter(policy -> policy.getId() == id)
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
     private List<String> getRandomTopicIds() {

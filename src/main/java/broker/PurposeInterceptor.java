@@ -112,7 +112,7 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
         this.onRepublicationEventListener = onRepublicationEventListener;
     }
 
-    public ArrayList<Customer> getCustomers() {
+    ArrayList<Customer> getCustomers() {
         return customers;
     }
 }
