@@ -25,7 +25,6 @@ public class YaPPL {
             final JsonSchema schema = factory.getJsonSchema(schemaNode);
             ProcessingReport report;
             report = schema.validate(toValidate);
-            System.out.println(report);
             if (!report.isSuccess()) {
                 throw new YaPPLFormatException();
             }
@@ -49,12 +48,7 @@ public class YaPPL {
             throws IOException {
         final String packageName = YaPPL.class.getPackage().getName();
         String packageBase = '/' + packageName.replace(".", "/");
-        System.out.println(packageBase);
         return JsonLoader.fromResource(packageBase + name);
-    }
-
-    public String generateNewPolicyId() {
-        return "1";
     }
 
 }

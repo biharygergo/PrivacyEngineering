@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class Policy {
     @JsonProperty("_id")
-    int id;
-    List<Preference> preference = new ArrayList<>();
+    private int id;
+    private List<Preference> preference = new ArrayList<>();
 
     public String createPolicy() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -148,19 +148,19 @@ public class Policy {
     private Optional<Rule> getRule(int ruleId) {
         return getPreference().stream()
                 .filter(preference -> preference.getRule().getId() == ruleId)
-                .map(preference -> preference.getRule()).findFirst();
+                .map(Preference::getRule).findFirst();
     }
 
     private List<Rule> getAllActiveRules() {
         return this.getPreference().stream()
                 .filter(preference -> preference.getRule().getExpDate().equals("0000-00-00T00:00:00.00Z"))
-                .map(preference -> preference.getRule())
+                .map(Preference::getRule)
                 .collect(Collectors.toList());
     }
 
     private List<Rule> getAllRules() {
         return this.getPreference().stream()
-                .map(preference -> preference.getRule())
+                .map(Preference::getRule)
                 .collect(Collectors.toList());
     }
 
