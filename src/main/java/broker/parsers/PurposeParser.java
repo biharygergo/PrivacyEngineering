@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 public class PurposeParser {
     List<Purpose> parsedPurposes = new ArrayList<>();
 
+    /**
+     * Parses purpose_config.json and maps the data to a list of Purposes.
+     * @return List<Purpose> contained in purpose_config.json
+     */
     public List<Purpose> getPurposesFromConfig() {
         try {
             // read the file

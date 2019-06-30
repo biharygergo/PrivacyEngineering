@@ -24,6 +24,11 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
 
     private OnRepublicationEventListener onRepublicationEventListener;
 
+    /**
+     * If a client connects to the broker, create a fake client policy for each available topic and store the
+     * dependencies in the customerIdToTopicPolicyMapping
+     * @param msg intercepted messsage
+     */
     @Override
     public void onConnect(InterceptConnectMessage msg) {
         String clientID = msg.getClientID();
@@ -45,6 +50,12 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
         return "EmbeddedLauncherPublishListener";
     }
 
+    /**
+     * Modifies behavior onPublish only for messages published into the topic topology.
+     * For a message in the topic topolgy, find a policy corresponding to the publisher of the message
+     * and republish the message to all allowed topics in the purpose topology.
+     * @param msg intercepted message
+     */
     @Override
     public void onPublish(InterceptPublishMessage msg) {
         // Do not republish messages that are sent on purpose topology
@@ -53,10 +64,6 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
         }
 
         final String decodedPayload = convertPayloadToBytes(msg);
-       /* System.out.println(
-                "Received on topic: " + msg.getTopicName() +
-                        " content: " + decodedPayload +
-                        " from: " + msg.getClientID());*/
 
         String policyId = customerIdToTopicPolicyMapping.get(msg.getClientID()).get(msg.getTopicName());
 
@@ -89,6 +96,7 @@ public class PurposeInterceptor extends AbstractInterceptHandler {
                 )
         );
     }
+
 
     private void updateTopicPolicyMapping(String customerId, String topic, String policyId) {
         Map<String, String> savedMap = customerIdToTopicPolicyMapping.get(customerId);

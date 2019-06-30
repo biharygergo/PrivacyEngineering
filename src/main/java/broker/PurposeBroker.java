@@ -52,6 +52,14 @@ public class PurposeBroker {
         interceptor.setOnRepublicationEventListener((topic, message) -> republishMessage(topic, message, mqttBroker));
     }
 
+    /**
+     * Republishes a message into the purpose topology. Retrieves the message topic and tries to match it to an existing
+     * Policy. Then, creates a new instance of a VatenfallPurposeMessage, transforms the message based on the policy
+     * and republishes the message into the purpose topology.
+     * @param topic a message was published to
+     * @param message message payload (data)
+     * @param mqttBroker broker instance
+     */
     private void republishMessage(String topic, String message, Server mqttBroker) {
         try {
             // Parse the message that is to be republished
@@ -83,6 +91,14 @@ public class PurposeBroker {
         }
     }
 
+    /**
+     * Appends additional properties to a message, as specified in the purpose
+     * @param vattenfallMessage original message
+     * @param purpose Purpose specified for the given topic by a client that sent the message
+     * @param vattenfallPurposeMessage transformed vatenfallMessage containing desired fields.
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     private void addAdditionalProperties(VattenfallMessage vattenfallMessage, Purpose purpose, VattenfallPurposeMessage vattenfallPurposeMessage) throws NoSuchFieldException, IllegalAccessException {
         if (!purpose.getAddedProperties().isEmpty()) {
             Customer customer = interceptor.getCustomers().stream()
@@ -105,12 +121,26 @@ public class PurposeBroker {
         }
     }
 
+    /**
+     * Removes additional properties from vatenfallMessage, as specified in the purpose
+     * @param vattenfallMessage message to be transformed
+     * @param purpose Purpose based on which the message will be transformed
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     private void removeProperties(VattenfallMessage vattenfallMessage, Purpose purpose) throws NoSuchFieldException, IllegalAccessException {
         for (String toRemove : purpose.getRemovedProperties()) {
             ObjectFieldHelper.setProperty(vattenfallMessage, toRemove, "");
         }
     }
 
+    /**
+     * Publishes the vatenfallPurposeMessage into the purpose topology
+     * @param topic purpose topic for which a message will be published
+     * @param mqttBroker instance of the broker
+     * @param vattenfallPurposeMessage message to be published
+     * @throws JsonProcessingException
+     */
     private void publishMessageInternally(String topic, Server mqttBroker, VattenfallPurposeMessage vattenfallPurposeMessage) throws JsonProcessingException {
         MqttPublishMessage messageToSend = MqttMessageBuilders.publish()
                 .topicName("purpose-topology/" + topic)

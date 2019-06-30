@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 
 public class UtilizerParser {
 
+    /**
+     * Parses utilizer_config.json and maps the data to a list of Utilizers.
+     * @return List<Utilizer> contained in utilizer_config.json
+     */
     public List<Utilizer> getUtilizersFromConfig() {
         List<Utilizer> parsedUtilizers = new ArrayList<>();
 

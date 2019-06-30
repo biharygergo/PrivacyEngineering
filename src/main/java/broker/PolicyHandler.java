@@ -14,6 +14,12 @@ public class PolicyHandler {
     private PurposeParser purposeParser = new PurposeParser();
     private UtilizerParser utilizerParser = new UtilizerParser();
 
+    /**
+     * Generates a Policy with a Rule for each of the 3 random available topics.
+     * In each of the rules, a random utilizer is permitted access to messages on that topic.
+     * On top of that, a rule that enables benchmarking is added to the Policy.
+     * @return a Policy with randomly generated rules.+
+     */
     Policy createFakePolicy() {
         Policy policy = new Policy();
         policy.setId(savedPolicies.size());
@@ -62,12 +68,20 @@ public class PolicyHandler {
                 .orElse(null);
     }
 
+    /**
+     * Retrieves a list of available purposes and returns 3 random ones from the list.
+     * @return a list of 3 Policy ids.
+     */
     private List<String> getRandomTopicIds() {
         List<String> availableIds = purposeParser.getAvailablePurposeTopicIds();
         Collections.shuffle(availableIds);
         return availableIds.subList(0, 3);
     }
 
+    /**
+     * Retrieves a list of available utilizers and returns 3 random ones from the list.
+     * @return a list of 3 Utilizer ids.
+     */
     private List<String> getRandomUtilizerIds() {
         List<String> availableIds = utilizerParser.getAvailableUtilizerIds();
         Collections.shuffle(availableIds);
