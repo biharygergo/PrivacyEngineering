@@ -36,3 +36,38 @@ Please follow this JSON format format under `./src/main/resources/example_messag
 }
 ```
 
+### Purpose Configuration 
+
+Purpose configuration under `./src/main/resources/purpose_config.json`
+
+```json
+[
+  {
+    "id": "admin/analysis",
+    "removed_properties": [],
+    "added_properties": [
+      "address"
+    ],
+    "aggregate_frequency": "0"
+  },
+  ...
+]
+```
+
+### Utilizer Configuration 
+
+Utilizer configuration under `./src/main/resources/utilizer_config.json`
+
+example:
+```json
+[
+  {
+    "id": "Uwr1j3ifoe2onmwofi23nor",
+    "name": "Vatenfall",
+    "address": "Some street 1, 11111 Berlin",
+    "phone_number": "123123123"
+  },
+  ...
+ ]
+```
+``
