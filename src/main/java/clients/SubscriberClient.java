@@ -4,6 +4,9 @@ import org.fusesource.hawtbuf.Buffer;
 import org.fusesource.hawtbuf.UTF8Buffer;
 import org.fusesource.mqtt.client.*;
 
+/**
+ * A Subscriber client that can subscribe to a given topic on a given host on mqtt.
+ */
 public class SubscriberClient {
 
     MQTT mqtt;

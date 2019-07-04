@@ -4,6 +4,9 @@ import broker.parsers.UtilizerParser;
 
 import java.util.List;
 
+/**
+ * A simulator used to start subscribers on a given topic.
+ */
 public class SubscriberSimulator extends Thread {
 
     public void run() {

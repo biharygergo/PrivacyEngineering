@@ -1,7 +1,8 @@
 package clients;
 
-import java.lang.reflect.Field;
-
+/**
+ * An example purpose-based message format that could be republished on the purpose topology.
+ */
 public class VattenfallPurposeMessage {
     VattenfallMessage originalMessage;
     String name;

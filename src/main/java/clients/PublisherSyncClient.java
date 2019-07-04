@@ -5,6 +5,9 @@ import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 
+/**
+ * Synchronous publisher for a given mqtt host and topic.
+ */
 public class PublisherSyncClient {
     private MQTT mqtt;
     private BlockingConnection connection;

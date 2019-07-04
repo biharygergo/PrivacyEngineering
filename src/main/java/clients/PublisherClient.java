@@ -6,6 +6,9 @@ import org.fusesource.mqtt.client.CallbackConnection;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 
+/**
+ * Asynchronous publisher on a given mqtt host and topic.
+ */
 public class PublisherClient {
 
     MQTT mqtt;

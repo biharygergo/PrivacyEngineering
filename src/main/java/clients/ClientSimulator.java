@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClientSimulator extends Thread {
 
+    /**
+     * Starts the clientSimulator.
+     */
     public void run() {
         for (int i = 0; i < 10; i++) {
             PublisherSyncClient client = new PublisherSyncClient("localhost", 1883);

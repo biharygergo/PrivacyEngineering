@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * An example message format that could be sent from a sensor device via MQTT.
+ */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class VattenfallMessage {
     @JsonProperty("subscriber_id")
