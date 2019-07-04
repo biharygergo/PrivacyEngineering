@@ -40,6 +40,7 @@ Please follow this JSON format format under `./src/main/resources/example_messag
 
 Purpose configuration under `./src/main/resources/purpose_config.json`
 
+example:
 ```json
 [
   {
@@ -70,4 +71,3 @@ example:
   ...
  ]
 ```
-``
